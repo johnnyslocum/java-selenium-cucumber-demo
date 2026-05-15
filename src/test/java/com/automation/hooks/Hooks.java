@@ -41,6 +41,6 @@ public class Hooks {
         }
 
         // Close browser
-        DriverManager.quitDriver();
+        DriverManager.closeDriver();
     }
 }

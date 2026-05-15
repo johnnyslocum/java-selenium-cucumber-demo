@@ -1,28 +1,13 @@
 package com.automation.runners;
 
-import io.cucumber.junit.Cucumber;
-import io.cucumber.junit.CucumberOptions;
-import org.junit.runner.RunWith;
 
-@RunWith(Cucumber.class)
-@CucumberOptions(
+import org.junit.platform.suite.api.IncludeEngines;
+import org.junit.platform.suite.api.SelectClasspathResource;
+import org.junit.platform.suite.api.Suite;
 
-        // Feature files location
-        features = "src/test/resources/features",
+@Suite
+@IncludeEngines("cucumber")
+@SelectClasspathResource("features") // Ensure your .feature files are in src/test/resources/features
 
-        // Step definitions and hooks location
-        glue = {"com.automation.stepdefinitions", "com.automation.hooks"},
-
-        // Reports generation
-        plugin = {
-                "pretty",  // make it look good
-                "html:target/cucumber-reports/report.html",  // HTML report
-                "json:target/cucumber-reports/report.json"   // JSON report
-        },
-        // set dryRun to true for syntax check only
-        dryRun = false,
-        monochrome = true,
-        tags = "@LoginTest"
-)
 public class TestRunner {
 }

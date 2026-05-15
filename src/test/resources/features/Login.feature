@@ -23,8 +23,10 @@ Feature: Login
     And User clicks on login button
     Then User should see "<result>"
     Examples:
-      | username     | password     | result              |
-      | student      | Password123  | Dashboard           |
-      | student      | wrongPass    | Error message       |
-      | invalidUser  | wrongPass    | Error message       |
-      | wrongUser    | Password123  | Error message       |
+      | username    | password    | result        |
+      | student     | Password123 | Dashboard     |
+      | student     | wrongPass   | Error message |
+      | invalidUser | wrongPass   | Error message |
+      | wrongUser   | Password123 | Error message |
+      | student     | Password123 | Error message |
+    # Note: The last row is to show a failing test case result.

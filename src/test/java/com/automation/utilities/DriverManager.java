@@ -8,7 +8,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 public class DriverManager {
 
-    //  instantiate the browser for each test
+    //  make webdriver thread safe for parallel execution
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 
     public static WebDriver getDriver() {
@@ -36,16 +36,16 @@ public class DriverManager {
         }
 
         WebDriver webDriver = new ChromeDriver(options);
-        System.out.println("✅ Chrome browser launched successfully");
+        System.out.println("Chrome browser launched successfully");
         return webDriver;
     }
 
     // cleanup a bit
-    public static void quitDriver() {
+    public static void closeDriver() {
         if (driver.get() != null) {
             driver.get().quit();
             driver.remove();
-            System.out.println("✅ Browser closed successfully");
+            System.out.println("Browser closed successfully");
         }
     }
 }

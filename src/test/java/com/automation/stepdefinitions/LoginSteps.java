@@ -3,7 +3,8 @@ package com.automation.stepdefinitions;
 import com.automation.pages.LoginPage;
 import com.automation.utilities.DriverManager;
 import io.cucumber.java.en.*;
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import org.openqa.selenium.WebDriver;
 
 public class LoginSteps {
@@ -35,32 +36,6 @@ public class LoginSteps {
         loginPage.clickLoginButton();
     }
 
-    // User is on dashboard
-    @Then("User should be redirected to dashboard")
-    public void userShouldBeRedirectedToDashboard() {
-        boolean isOnDashboard = loginPage.isOnDashboard();
-        Assert.assertTrue("User sees dashboard!", isOnDashboard);
-        System.out.println("User sees dashboard");
-    }
-
-    // User sees successful login message
-    @Then("User should see welcome message")
-    public void userShouldSeeWelcomeMessage() {
-        String welcomeMessage = loginPage.getWelcomeMessage();
-        Assert.assertFalse("Welcome message is empty!",
-                welcomeMessage.isEmpty());
-        Assert.assertTrue("Welcome message is correct!",
-                welcomeMessage.contains("Logged In Successfully"));
-    }
-
-    // User sees error message
-    @Then("User should see error message")
-    public void userShouldSeeErrorMessage() {
-        String errorMessage = loginPage.getErrorMessage();
-        Assert.assertFalse("Error message is empty!",
-                errorMessage.isEmpty());
-    }
-
     // Step that handles both successful and unsuccessful login scenarios
     @Then("User should see {string}")
     public void userShouldSee(String result) {
@@ -69,5 +44,28 @@ public class LoginSteps {
         } else {
             userShouldSeeErrorMessage();
         }
+    }
+
+    // User is on dashboard
+    @Then("User should be redirected to dashboard")
+    public void userShouldBeRedirectedToDashboard() {
+        boolean isOnDashboard = loginPage.isOnDashboard();
+        assertTrue(isOnDashboard, "User sees dashboard!");
+        System.out.println("User sees dashboard");
+    }
+
+    // User sees successful login message
+    @Then("User should see welcome message")
+    public void userShouldSeeWelcomeMessage() {
+        String welcomeMessage = loginPage.getWelcomeMessage();
+        assertFalse(welcomeMessage.isEmpty(), "Welcome message is empty!");
+        assertTrue(welcomeMessage.contains("Logged In Successfully"), "Welcome message is correct!");
+    }
+
+    // User sees error message
+    @Then("User should see error message")
+    public void userShouldSeeErrorMessage() {
+        String errorMessage = loginPage.getErrorMessage();
+        assertFalse(errorMessage.isEmpty(), "Error message is empty!");
     }
 }
