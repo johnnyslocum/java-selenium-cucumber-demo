@@ -1,6 +1,6 @@
-package com.automation.stepdefinitions;
+package com.automation.uistepdefinitions;
 
-import com.automation.pages.LoginPage;
+import com.automation.uipages.LoginPage;
 import com.automation.utilities.DriverManager;
 import io.cucumber.java.en.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
