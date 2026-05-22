@@ -12,7 +12,6 @@ public class Hooks {
 
     WebDriver driver;
 
-
     // Runs before each scenario to set up everything we need
     @Before
     public void setUp(Scenario scenario) {
@@ -23,7 +22,7 @@ public class Hooks {
         driver = DriverManager.getDriver();
     }
 
-    // Runs after each scenario for cleanup and to screenshot a fail
+    // Runs after each scenario for cleanup and to screenshot fails
     @After
     public void tearDown(Scenario scenario) {
 
@@ -39,7 +38,6 @@ public class Hooks {
         } else {
             System.out.println("Test PASSED: " + scenario.getName());
         }
-
         // Close browser
         DriverManager.closeDriver();
     }

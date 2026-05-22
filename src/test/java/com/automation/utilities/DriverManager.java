@@ -32,7 +32,7 @@ public class DriverManager {
         // Run in headless mode if specified
         if (System.getProperty("headless", "false").equalsIgnoreCase("true")) {
             options.addArguments("--headless=new");
-            options.addArguments("--window-size=1920,1080"); // Important for headless stability
+            options.addArguments("--window-size=1920,1080"); // helps with headless stability
         }
 
         WebDriver webDriver = new ChromeDriver(options);
