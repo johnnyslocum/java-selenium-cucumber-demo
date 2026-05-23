@@ -10,35 +10,39 @@ import org.openqa.selenium.WebDriver;
 
 public class Hooks {
 
-    WebDriver driver;
-
     // Runs before each scenario to set up everything we need
     @Before
     public void setUp(Scenario scenario) {
-
         System.out.println("Starting Test: " + scenario.getName());
 
         // Initialize browser
-        driver = DriverManager.getDriver();
+        DriverManager.getDriver();
     }
 
     // Runs after each scenario for cleanup and to screenshot fails
     @After
     public void tearDown(Scenario scenario) {
+        // Fetch the driver reference cleanly from the ThreadLocal space for THIS thread
+        WebDriver currentDriver = DriverManager.getDriver();
 
         // Test fails, screenshot
         if (scenario.isFailed()) {
             System.out.println("Test FAILED: " + scenario.getName());
 
-            // Take screenshot
-            byte[] screenshot = ((TakesScreenshot) driver)
-                    .getScreenshotAs(OutputType.BYTES);
-            scenario.attach(screenshot, "image/png", "Failed Screenshot");
-            System.out.println("Screenshot Saved");
+            try {
+                // Take screenshot using the thread-isolated driver reference
+                byte[] screenshot = ((TakesScreenshot) currentDriver)
+                        .getScreenshotAs(OutputType.BYTES);
+                scenario.attach(screenshot, "image/png", "Failed Screenshot");
+                System.out.println("Screenshot Saved");
+            } catch (Exception e) {
+                System.err.println("Failed to capture screenshot: " + e.getMessage());
+            }
         } else {
             System.out.println("Test PASSED: " + scenario.getName());
         }
-        // Close browser
+
+        // Cleanly close the browser bound strictly to this thread
         DriverManager.closeDriver();
     }
 }
