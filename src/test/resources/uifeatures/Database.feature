@@ -1,3 +1,4 @@
+@Db
 Feature: Database Operations
 
   Background:

@@ -193,21 +193,24 @@ public class DriverManager {
      */
     private static void cleanOldChromeDriverLogs(File logDir) {
         final int MAX_LOGS_PER_THREAD = 0;
-        if (!logDir.exists() || !logDir.isDirectory()) {
+
+        if (logDir == null || !logDir.exists() || !logDir.isDirectory()) {
             return;
         }
+
+        // Group logs by thread ID (robust extraction) and delete older files, keeping MAX_LOGS_PER_THREAD
+        final Pattern strictPattern = Pattern.compile("^chromedriver-(\\d+)-(\\d+)\\.log$");
+        final Pattern digitsPattern = Pattern.compile("(\\d+)");
+
         try {
             // Group logs by thread ID and sort by modification time
-            Map<String, List<File>> logsByThread = new HashMap<>();
-            File[] allLogs = logDir.listFiles((dir, name) -> name.matches("chromedriver-\\d+-.+\\.log"));
+            File[] allLogs = logDir.listFiles((dir, name) -> name.startsWith("chromedriver-") && name.endsWith(".log"));
 
             if (allLogs == null || allLogs.length == 0) {
                 return;
             }
 
-            // Group logs by thread ID (robust extraction) and delete older files, keeping MAX_LOGS_PER_THREAD
-            final Pattern strictPattern = Pattern.compile("^chromedriver-(\\d+)-(\\d+)\\.log$");
-            final Pattern digitsPattern = Pattern.compile("(\\d+)");
+            Map<String, List<File>> logsByThread = new HashMap<>();
 
             for (File log : allLogs) {
                 String name = log.getName();
@@ -230,27 +233,36 @@ public class DriverManager {
 
             // Delete old logs, keeping only the most recent MAX_LOGS_PER_THREAD per thread
             int deleted = 0;
-            for (List<File> logs : logsByThread.values()) {
-                if (logs.size() > MAX_LOGS_PER_THREAD) {
-                    // Sort by modification time (oldest first)
-                    logs.sort(Comparator.comparingLong(File::lastModified));
-                    int toDelete = logs.size() - MAX_LOGS_PER_THREAD;
-                    for (int i = 0; i < toDelete; i++) {
-                        File f = logs.get(i);
-                        try {
-                            if (f.delete()) {
-                                deleted++;
-                            } else {
-                                System.err.println("[DriverManager] Warning: could not delete log file: " + f.getAbsolutePath());
-                            }
-                        } catch (SecurityException se) {
-                            System.err.println("[DriverManager] Warning: SecurityException deleting log file: " + f.getAbsolutePath() + " -> " + se.getMessage());
+            for (Map.Entry<String, List<File>> e : logsByThread.entrySet()) {
+                List<File> logs = e.getValue();
+                // sort by lastModified ascending (oldest first)
+                logs.sort(Comparator.comparingLong(File::lastModified));
+
+                if (logs.size() <= MAX_LOGS_PER_THREAD) {
+                    System.out.println("[DriverManager] thread " + e.getKey() + " has " + logs.size() + " log(s) - nothing to delete");
+                    continue;
+                }
+
+                int toDelete = logs.size() - MAX_LOGS_PER_THREAD;
+                System.out.println("[DriverManager] thread " + e.getKey() + " has " + logs.size() + " logs; deleting " + toDelete + " oldest");
+
+                for (int i = 0; i < toDelete; i++) {
+                    File f = logs.get(i);
+                    try {
+                        boolean ok = f.delete();
+                        if (ok) {
+                            deleted++;
+                            System.out.println("[DriverManager] Deleted old log: " + f.getName());
+                        } else {
+                            System.err.println("[DriverManager] Failed to delete log (delete returned false): " + f.getAbsolutePath());
                         }
+                    } catch (SecurityException se) {
+                        System.err.println("[DriverManager] SecurityException deleting log: " + f.getAbsolutePath() + " -> " + se.getMessage());
                     }
                 }
             }
             if (deleted > 0) {
-                System.out.println("[DriverManager] Cleaned up " + deleted + " old chromedriver logs (keeping " + MAX_LOGS_PER_THREAD + " per thread)");
+                System.out.println("[DriverManager] Cleaned up " + deleted + " old chromedriver logs.");
             }
         } catch (Exception e) {
             System.err.println("[DriverManager] Warning: failed to clean chromedriver logs: " + e.getMessage());

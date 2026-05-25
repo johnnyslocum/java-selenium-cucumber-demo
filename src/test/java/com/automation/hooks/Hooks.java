@@ -60,7 +60,7 @@ public class Hooks {
     //Runs once ALL scenarios complete (suite-level cleanup) and is static so it can be called globally.
     @AfterAll
     public static void globalTearDown() {
-        logger.info("[Hooks] Global @AfterAll: Shutting down all resources...");
+        logger.info("Global @AfterAll: Shutting down all resources...");
         try {
             // Close db connection
             DbUtils.shutdown();
