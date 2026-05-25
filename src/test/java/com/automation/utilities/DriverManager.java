@@ -84,20 +84,6 @@ public class DriverManager {
         options.addArguments("--disable-gpu");
         options.addArguments("--disable-software-rasterizer");
 
-//        // Headless handling (use -Dheadless=true to enable)
-//        if (System.getProperty("headless", "false").equalsIgnoreCase("true")) {
-//            options.addArguments("--headless=new");
-//            options.addArguments("--window-size=1920,1080");
-//        } else {
-//            // prefer normal interactive runs
-//            // Avoid adding --no-sandbox and --disable-dev-shm-usage on Windows by default
-//            // If running in Linux container you may enable them via -DuseNoSandbox=true
-//            if (System.getProperty("useNoSandbox", "false").equalsIgnoreCase("true")) {
-//                options.addArguments("--no-sandbox");
-//                options.addArguments("--disable-dev-shm-usage");
-//            }
-//        }
-
         // Headless handling: Checks System properties, Environment variables, AND a fallback default config
         boolean isHeadlessRequested = System.getProperty("headless", "false").equalsIgnoreCase("true")
                 || System.getenv("headless") != null && System.getenv("headless").equalsIgnoreCase("true")
@@ -202,7 +188,7 @@ public class DriverManager {
     }
 
     /**
-     * Keep only the most recent number of chromedriver logs per thread.
+     * Specify the number of chromedriver logs per thread.
      * Deletes older logs to avoid disk clutter during long runs.
      */
     private static void cleanOldChromeDriverLogs(File logDir) {
