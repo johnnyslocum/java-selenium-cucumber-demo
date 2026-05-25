@@ -113,7 +113,8 @@
                         <include>**/TestRunner.java</include>
                     </includes>
                     <systemPropertyVariables>
-                        <headless>true</headless>
+                        <!-- Uncomment for Jenkins pipeline -->
+<!--                        <headless>true</headless>-->
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
