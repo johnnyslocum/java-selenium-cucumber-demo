@@ -1,4 +1,4 @@
-@Regression
+@ExcelLogin
 Feature: Login with Excel Data
 
   Scenario: Run login tests from Excel sheet

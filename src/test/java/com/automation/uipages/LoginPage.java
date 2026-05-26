@@ -1,7 +1,6 @@
 package com.automation.uipages;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -9,8 +8,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.Objects;
 import com.automation.utilities.DriverManager;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.FluentWait;
 import java.util.function.Function;
 
@@ -153,11 +150,22 @@ public class LoginPage {
         System.out.println("Clicked login button");
     }
 
+//    public String getErrorMessage() {
+//        wait.until(ExpectedConditions.visibilityOf(errorMessage));
+//        String error = errorMessage.getText();
+//        System.out.println("Error message: " + error);
+//        return error;
+//    }
+
     public String getErrorMessage() {
-        wait.until(ExpectedConditions.visibilityOf(errorMessage));
-        String error = errorMessage.getText();
-        System.out.println("Error message: " + error);
-        return error;
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("error")));
+
+        if (errorMessage.isDisplayed()) {
+            String error = errorMessage.getText();
+            System.out.println("Error message captured: " + error);
+            return error;
+        }
+        return "";
     }
 
     public String getWelcomeMessage() {
