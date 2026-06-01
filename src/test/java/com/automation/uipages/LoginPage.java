@@ -150,23 +150,23 @@ public class LoginPage {
         System.out.println("Clicked login button");
     }
 
-//    public String getErrorMessage() {
-//        wait.until(ExpectedConditions.visibilityOf(errorMessage));
-//        String error = errorMessage.getText();
-//        System.out.println("Error message: " + error);
-//        return error;
-//    }
-
     public String getErrorMessage() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("error")));
-
-        if (errorMessage.isDisplayed()) {
-            String error = errorMessage.getText();
-            System.out.println("Error message captured: " + error);
-            return error;
-        }
-        return "";
+        wait.until(ExpectedConditions.visibilityOf(errorMessage));
+        String error = errorMessage.getText();
+        System.out.println("Error message: " + error);
+        return error;
     }
+
+//    public String getErrorMessage2() {
+//        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("error")));
+//
+//        if (errorMessage.isDisplayed()) {
+//            String error = errorMessage.getText();
+//            System.out.println("Error message captured: " + error);
+//            return error;
+//        }
+//        return "";
+//    }
 
     public String getWelcomeMessage() {
         wait.until(ExpectedConditions.visibilityOf(welcomeMessage));
